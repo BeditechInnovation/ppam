@@ -1,0 +1,26 @@
+name: Python package
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+            python -m pip install -U pip pytest
+            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+            pip install -e .
+      - name: Show repository tree (optional, helpful for debugging)
+        run: |
+          echo "Working directory: $(pwd)"
+          ls -la
+          echo "Tree:"
+          ls -R
+      - name: Run tests
+        run: pytest -q
