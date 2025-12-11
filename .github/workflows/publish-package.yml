@@ -24,6 +24,14 @@ jobs:
       - name: Install build dependencies
         run: python -m pip install --upgrade pip build
 
+      - name: Remove old egg-info and dist folders
+        run: |
+          rm -rf *.egg-info
+          rm -rf ppai.egg-info
+          rm -rf ppam.egg-info
+          rm -rf dist
+
+
       - name: Build package
         run: python -m build
 
