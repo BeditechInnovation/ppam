@@ -5,8 +5,7 @@ on:
     types: [published]
 
 permissions:
-  contents: read
-  id-token: write  # Required for trusted publishing (no password needed)
+  contents: read   # ❌ NO id-token
 
 jobs:
   build-and-publish:
@@ -24,19 +23,19 @@ jobs:
       - name: Install build dependencies
         run: python -m pip install --upgrade pip build
 
-      - name: Remove old egg-info and dist folders
+      - name: Clean old artifacts
         run: |
-          rm -rf *.egg-info
-          rm -rf ppai.egg-info
-          rm -rf ppam.egg-info
           rm -rf dist
-
+          rm -rf *.egg-info
 
       - name: Build package
         run: python -m build
 
-      - name: Publish package to PyPI
+      - name: Publish package to PyPI (token auth)
         uses: pypa/gh-action-pypi-publish@v1.8.8
         with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          repository-url: https://upload.pypi.org/legacy/
           skip-existing: true
-          verify_metadata: false
+          verify-metadata: false
